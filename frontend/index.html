@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rey del Acordeón - Learning Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🪗 Rey del Acordeón</h1>
+            <p class="subtitle">Track your accordion learning journey</p>
+            <button id="addSongBtn" class="btn-primary">+ Add New Song</button>
+        </header>
+
+        <div class="kanban-board">
+            <div class="kanban-column" data-status="Want to Learn">
+                <div class="column-header">
+                    <h2>Want to Learn</h2>
+                    <span class="song-count">0</span>
+                </div>
+                <div class="cards-container" data-status="Want to Learn"></div>
+            </div>
+
+            <div class="kanban-column" data-status="Currently Learning">
+                <div class="column-header">
+                    <h2>Currently Learning</h2>
+                    <span class="song-count">0</span>
+                </div>
+                <div class="cards-container" data-status="Currently Learning"></div>
+            </div>
+
+            <div class="kanban-column" data-status="Learned">
+                <div class="column-header">
+                    <h2>Learned</h2>
+                    <span class="song-count">0</span>
+                </div>
+                <div class="cards-container" data-status="Learned"></div>
+            </div>
+
+            <div class="kanban-column" data-status="Mastered">
+                <div class="column-header">
+                    <h2>Mastered</h2>
+                    <span class="song-count">0</span>
+                </div>
+                <div class="cards-container" data-status="Mastered"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding new songs -->
+    <div id="songModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Song</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="songForm">
+                <div class="form-group">
+                    <label for="songTitle">Song Title *</label>
+                    <input type="text" id="songTitle" name="title" required placeholder="e.g., La Cumbia del Acordeón">
+                </div>
+
+                <div class="form-group">
+                    <label for="youtubeUrl">YouTube Tutorial Link</label>
+                    <input type="url" id="youtubeUrl" name="youtube_url" placeholder="https://youtube.com/watch?v=...">
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Difficulty *</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="">Select difficulty</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" name="status" required>
+                        <option value="Want to Learn">Want to Learn</option>
+                        <option value="Currently Learning">Currently Learning</option>
+                        <option value="Learned">Learned</option>
+                        <option value="Mastered">Mastered</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Song</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
