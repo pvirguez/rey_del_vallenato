@@ -1,5 +1,5 @@
 // API Configuration - change this to your deployed backend URL
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://reydelvallenato-production.up.railway.app/api';
 
 // State
 let songs = [];
