@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup Event Listeners
 function setupEventListeners() {
-    addSongBtn.addEventListener('click', openModal);
+    addSongBtn.addEventListener('click', () => openModal());
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
     songForm.addEventListener('submit', handleAddSong);
