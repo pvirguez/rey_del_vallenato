@@ -3,6 +3,7 @@ const API_URL = 'http://localhost:3000/api';
 
 // State
 let songs = [];
+let editingSongId = null; // null when adding, song ID when editing
 
 // DOM Elements
 const modal = document.getElementById('songModal');
@@ -33,13 +34,45 @@ function setupEventListeners() {
 }
 
 // Modal Functions
-function openModal() {
+function openModal(songId = null) {
+    const modalTitle = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const songIdField = document.getElementById('songId');
+
+    if (songId) {
+        // Edit mode
+        editingSongId = songId;
+        const song = songs.find(s => s.id === songId);
+
+        // Update modal UI
+        modalTitle.textContent = 'Edit Song';
+        submitBtn.textContent = 'Save Changes';
+
+        // Pre-populate form fields
+        document.getElementById('songTitle').value = song.title;
+        document.getElementById('youtubeUrl').value = song.youtube_url || '';
+        document.getElementById('difficulty').value = song.difficulty;
+        document.getElementById('status').value = song.status;
+
+        songIdField.value = songId;
+    } else {
+        // Add mode
+        editingSongId = null;
+
+        // Update modal UI
+        modalTitle.textContent = 'Add New Song';
+        submitBtn.textContent = 'Add Song';
+
+        songIdField.value = '';
+    }
+
     modal.classList.add('active');
 }
 
 function closeModal() {
     modal.classList.remove('active');
     songForm.reset();
+    editingSongId = null; // Reset edit state
 }
 
 // API Functions
@@ -60,7 +93,7 @@ async function handleAddSong(e) {
     e.preventDefault();
 
     const formData = new FormData(songForm);
-    const newSong = {
+    const songData = {
         title: formData.get('title'),
         youtube_url: formData.get('youtube_url') || null,
         difficulty: formData.get('difficulty'),
@@ -68,23 +101,39 @@ async function handleAddSong(e) {
     };
 
     try {
-        const response = await fetch(`${API_URL}/songs`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newSong)
-        });
+        if (editingSongId) {
+            // Edit mode: use PUT
+            const response = await fetch(`${API_URL}/songs/${editingSongId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(songData)
+            });
 
-        if (!response.ok) throw new Error('Failed to add song');
+            if (!response.ok) throw new Error('Failed to update song');
 
-        const createdSong = await response.json();
-        songs.push(createdSong);
+            const updatedSong = await response.json();
+            const index = songs.findIndex(s => s.id === editingSongId);
+            songs[index] = updatedSong;
+        } else {
+            // Add mode: use POST
+            const response = await fetch(`${API_URL}/songs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(songData)
+            });
+
+            if (!response.ok) throw new Error('Failed to add song');
+
+            const createdSong = await response.json();
+            songs.push(createdSong);
+        }
+
         renderBoard();
         closeModal();
     } catch (error) {
-        console.error('Error adding song:', error);
-        alert('Failed to add song. Please try again.');
+        console.error('Error saving song:', error);
+        const action = editingSongId ? 'update' : 'add';
+        alert(`Failed to ${action} song. Please try again.`);
     }
 }
 
@@ -174,6 +223,15 @@ function createSongCard(song) {
     // Drag and Drop Events
     card.addEventListener('dragstart', handleDragStart);
     card.addEventListener('dragend', handleDragEnd);
+
+    // Click handler for editing
+    card.addEventListener('click', (e) => {
+        // Prevent edit if clicking delete button or youtube link
+        if (e.target.closest('.delete-btn') || e.target.closest('.youtube-link')) {
+            return;
+        }
+        openModal(song.id);
+    });
 
     return card;
 }

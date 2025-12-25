@@ -53,10 +53,11 @@
     <div id="songModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Song</h2>
+                <h2 id="modalTitle">Add New Song</h2>
                 <span class="close">&times;</span>
             </div>
             <form id="songForm">
+                <input type="hidden" id="songId" value="">
                 <div class="form-group">
                     <label for="songTitle">Song Title *</label>
                     <input type="text" id="songTitle" name="title" required placeholder="e.g., La Cumbia del Acordeón">
@@ -89,7 +90,7 @@
 
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn-primary">Add Song</button>
+                    <button type="submit" class="btn-primary" id="submitBtn">Add Song</button>
                 </div>
             </form>
         </div>
